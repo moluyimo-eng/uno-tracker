@@ -190,43 +190,58 @@ body {
 
 /* ── Mobile ── */
 @media (max-width:640px) {
-  .container { padding: 20px 14px; }
-  .header { margin-bottom: 24px; }
-  .header .tag { font-size: 0.62em; letter-spacing: 2px; padding: 3px 14px; }
-  .header h1 { font-size: 2em; letter-spacing: 3px; }
-  .header .sub { font-size: 0.72em; letter-spacing: 2px; }
-  .cdt-box { flex-wrap: wrap; gap: 8px; padding: 12px 18px; justify-content: center; }
+  body { overflow-x: hidden; }
+  .container { padding: 16px 10px; overflow-x: hidden; }
+  .header { margin-bottom: 20px; }
+  .header .tag { font-size: 0.6em; letter-spacing: 2px; padding: 3px 12px; }
+  .header h1 { font-size: 1.8em; letter-spacing: 2px; }
+  .header .sub { font-size: 0.68em; letter-spacing: 2px; }
+  .cdt-box { flex-wrap: wrap; gap: 6px; padding: 10px 14px; justify-content: center; border-radius: 10px; }
   .cdt-box .cdt-sep { display: none; }
-  .top-stats { flex-wrap: wrap; }
-  .stat-mod { flex: 0 0 50%; max-width: 50%; border: none; border-bottom: 1px solid #e8e0d0; padding: 14px 8px; }
-  .stat-mod .num { font-size: 1.8em; }
-  .podium-wrap { padding: 20px 10px 18px; }
-  .podium { gap: 16px; }
-  .p-1 .p-avatar { width: 72px; height: 72px; }
-  .p-2 .p-avatar { width: 58px; height: 58px; }
-  .p-3 .p-avatar { width: 52px; height: 52px; }
-  .p-1 .p-crown::after { font-size: 1.5em; }
-  .p-2 .p-crown::after { font-size: 1.2em; }
-  .p-3 .p-crown::after { font-size: 1em; }
-  .p-name { font-size: 0.78em; }
-  .p-1 .p-name { font-size: 0.88em; }
-  .p-stat { font-size: 0.64em; }
-  .game-card { padding: 14px 14px; }
-  .g-venue { font-size: 0.82em; }
-  .g-meta { font-size: 0.62em; }
-  .p-row { gap: 6px; padding: 4px 0; }
-  .p-row .pn { font-size: 0.74em; }
-  .p-row .pq { font-size: 0.64em; }
-  .p-row .ps { font-size: 0.74em; min-width: 40px; }
-  .g-photo-fan { height: 100px; padding: 0 10px; }
-  .g-photo-fan img { height: 80px; margin-left: -20px; border-width: 2px; }
-  .rk-row .rm { font-size: 0.74em; }
-  .rk-row .rr { font-size: 0.64em; }
-  .sb-card { padding: 14px; }
-  .sb-card h3 { font-size: 0.82em; }
-  .modal-box { padding: 20px 16px; max-width: 95vw; }
-  .modal-box .m-name { font-size: 1.1em; }
-  .modal-box .m-chart { height: 160px; }
+  .top-stats { flex-wrap: wrap; margin-bottom: 28px; }
+  .stat-mod { flex: 0 0 50%; max-width: 50%; border: none; border-bottom: 1px solid #e8e0d0; padding: 12px 6px; }
+  .stat-mod .num { font-size: 1.6em; }
+  .podium-wrap { padding: 18px 8px 14px; margin-bottom: 28px; }
+  .podium { gap: 12px; }
+  .p-1 .p-avatar { width: 68px; height: 68px; }
+  .p-2 .p-avatar { width: 54px; height: 54px; }
+  .p-3 .p-avatar { width: 48px; height: 48px; }
+  .p-1 .p-crown::after { font-size: 1.4em; }
+  .p-2 .p-crown::after { font-size: 1.1em; }
+  .p-3 .p-crown::after { font-size: 0.9em; }
+  .p-name { font-size: 0.74em; margin-top: 6px; }
+  .p-1 .p-name { font-size: 0.84em; }
+  .p-stat { font-size: 0.6em; }
+  .main { display: block; }
+  .main > * { min-width: 0; }
+  .game-card { padding: 12px 10px; border-radius: 10px; margin-bottom: 10px; }
+  .g-top { flex-direction: column; gap: 2px; margin-bottom: 8px; }
+  .g-venue { font-size: 0.8em; }
+  .g-meta { font-size: 0.6em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .p-row { gap: 5px; padding: 3px 0; }
+  .p-row .pa { width: 20px; height: 20px; }
+  .p-row .rk { font-size: 0.6em; width: 14px; }
+  .p-row .pn { font-size: 0.7em; }
+  .p-row .pt span { font-size: 0.58em; padding: 1px 5px; }
+  .p-row .pq { font-size: 0.6em; }
+  .p-row .ps { font-size: 0.7em; min-width: 36px; }
+  .g-photo-fan { height: 90px; padding: 0 6px; }
+  .g-photo-fan img { height: 72px; margin-left: -22px; border-width: 2px; border-radius: 8px; }
+  .g-photo-label { font-size: 0.68em; margin-bottom: 6px; }
+  .rk-row .ra { width: 20px; height: 20px; }
+  .rk-row .rm { font-size: 0.7em; }
+  .rk-row .rr { font-size: 0.6em; }
+  .sb-card { padding: 12px 10px; }
+  .sb-card h3 { font-size: 0.78em; margin-bottom: 10px; padding-bottom: 8px; }
+  .v-row { font-size: 0.7em; }
+  .cloud span { font-size: 0.62em; padding: 2px 8px; }
+  .modal-box { padding: 18px 14px; max-width: 96vw; }
+  .modal-box .m-name { font-size: 1em; }
+  .modal-box .m-stat { font-size: 0.7em; }
+  .modal-box .m-chart { height: 140px; }
+  .modal-box .m-games { font-size: 0.7em; }
+  .footer { font-size: 0.6em; margin-top: 28px; }
+  .sec-hd .txt { font-size: 0.8em; }
 }
 </style>
 </head>
