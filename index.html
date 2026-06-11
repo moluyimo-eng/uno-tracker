@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNO 战纪 · 牌桌编年史</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: "Noto Sans SC", -apple-system, "PingFang SC", sans-serif;
+  background: linear-gradient(160deg, #fef9e7 0%, #fdebd0 30%, #eaf2f8 60%, #f5eef8 100%);
+  color: #2d2d3a; min-height: 100vh;
+}
+.container { max-width: 1100px; margin:0 auto; padding: 36px 24px; }
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 40px; }
+.header .tag { display:inline-block; padding:4px 18px; border-radius:20px;
+  background: linear-gradient(135deg,#fff3cd,#ffe69c); color:#b8860b; font-size:0.7em; font-weight:700; letter-spacing:3px; margin-bottom:14px; }
+.header h1 { font-size:3em; font-weight:900; letter-spacing:6px; margin-bottom:6px;
+  background: linear-gradient(135deg,#e74c3c,#f39c12,#27ae60,#2980b9,#8e44ad);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .sub { color:#999; font-size:0.85em; letter-spacing:4px; }
+
+/* ── Countdown ── */
+.cdt-wrap { text-align:center; margin-bottom:36px; }
+.cdt-box { display:inline-flex; align-items:center; gap:14px; background:#fff; border:1px solid #f0e8d8; border-radius:14px; padding:14px 24px; box-shadow:0 2px 10px rgba(0,0,0,0.03); }
+.cdt-box .cdt-label { font-size:0.78em; color:#b0a090; letter-spacing:1px; }
+.cdt-box .cdt-num { font-size:1.5em; font-weight:900; color:#e67e22; }
+.cdt-box .cdt-sep { width:1px; height:20px; background:#f0e8d8; }
+
+
+/* ── Top Stats ── */
+.top-stats { display:flex; justify-content:center; gap:0; margin-bottom:40px; }
+.stat-mod { flex:1; max-width:200px; text-align:center; padding:18px 12px;
+  border-right:1px solid #e8e0d0; }
+.stat-mod:last-child { border-right:none; }
+.stat-mod .num { font-size:2.4em; font-weight:900; line-height:1; }
+.stat-mod .label { font-size:0.68em; font-weight:600; color:#b0a090; letter-spacing:2px; margin-top:4px; }
+.stat-mod:nth-child(1) .num { color:#e74c3c; }
+.stat-mod:nth-child(2) .num { color:#27ae60; }
+.stat-mod:nth-child(3) .num { color:#2980b9; }
+.stat-mod:nth-child(4) .num { color:#e67e22; }
+
+@media (max-width:600px) { .top-stats { flex-wrap:wrap; } .stat-mod { flex:0 0 50%; max-width:50%; border:none; border-bottom:1px solid #e8e0d0; } }
+
+/* ── Podium ── */
+.podium-wrap { background: linear-gradient(180deg,#fffdf7,#fff9ec); border:2px solid #f0e0b0;
+  border-radius:20px; padding:30px 20px 24px; margin-bottom:40px; box-shadow:0 4px 20px rgba(0,0,0,0.04); }
+.pw-title { text-align:center; font-size:0.9em; font-weight:800; color:#5a4a3a; letter-spacing:2px; margin-bottom:22px; }
+.podium { display:flex; justify-content:center; align-items:flex-end; gap:40px; }
+.p-spot { text-align:center; }
+.p-avatar { border-radius:50%; object-fit:cover; background:#f0e8d8; border:3px solid; }
+.p-1 .p-avatar { width:96px; height:96px; border-color:#ffd700; box-shadow:0 0 32px rgba(255,215,0,0.3); }
+.p-2 .p-avatar { width:76px; height:76px; border-color:#c0c0c0; box-shadow:0 0 20px rgba(192,192,192,0.25); }
+.p-3 .p-avatar { width:68px; height:68px; border-color:#cd853f; box-shadow:0 0 18px rgba(205,133,63,0.25); }
+.p-avatar-wrap { position:relative; display:inline-block; line-height:0; }
+.p-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%); z-index:5; }
+.p-1 .p-crown { top:-24px; }
+.p-2 .p-crown { top:-16px; }
+.p-3 .p-crown { top:-14px; }
+.p-crown::after { display:block; line-height:1; }
+.p-1 .p-crown::after { content:'\01F451'; font-size:2em; }
+.p-2 .p-crown::after { content:'\01F451'; font-size:1.5em; opacity:0.8; }
+.p-3 .p-crown::after { content:'\01F451'; font-size:1.3em; opacity:0.6; }
+.p-name { font-weight:700; margin-top:10px; font-size:0.9em; }
+.p-1 .p-name { color:#b8860b; font-size:1.05em; }
+.p-2 .p-name { color:#888; }
+.p-3 .p-name { color:#b8860b; }
+/* confetti */
+.podium-wrap { position:relative; overflow:hidden; }
+.podium-wrap { position:relative; overflow:hidden; }
+.confetti { position:absolute; pointer-events:none; z-index:0; animation:confetti-fall linear infinite; }
+.confetti:nth-child(1) { left:5%; top:-10px; animation-duration:2.5s; animation-delay:0s; font-size:1.2em; }
+.confetti:nth-child(2) { left:15%; top:-20px; animation-duration:3s; animation-delay:0.4s; font-size:1em; }
+.confetti:nth-child(3) { left:25%; top:-5px; animation-duration:2.8s; animation-delay:0.8s; font-size:1.4em; }
+.confetti:nth-child(4) { left:70%; top:-15px; animation-duration:3.2s; animation-delay:0.2s; font-size:1.1em; }
+.confetti:nth-child(5) { left:82%; top:-8px; animation-duration:2.6s; animation-delay:0.6s; font-size:1.3em; }
+.confetti:nth-child(6) { left:92%; top:-25px; animation-duration:2.9s; animation-delay:1s; font-size:1em; }
+.confetti:nth-child(7) { left:10%; top:-30px; animation-duration:3.5s; animation-delay:1.2s; font-size:0.9em; }
+.confetti:nth-child(8) { left:78%; top:-35px; animation-duration:3.1s; animation-delay:0.3s; font-size:1.2em; }
+@keyframes confetti-fall { 0% { transform:translateY(0) rotate(0deg) scale(1); opacity:0.8; } 50% { opacity:1; } 100% { transform:translateY(200px) rotate(360deg) scale(0.5); opacity:0; } }
+.pw-title { position:relative; z-index:1; }
+.podium { position:relative; z-index:1; }
+.p-stat { font-size:0.7em; color:#bbb; margin-top:2px; }
+.p-line { height:3px; border-radius:2px; margin:8px auto 0; }
+.p-1 .p-line { width:80px; background:linear-gradient(90deg,#ffd700,#ffb300); }
+.p-2 .p-line { width:60px; background:linear-gradient(90deg,#c0c0c0,#a0a0a0); }
+.p-3 .p-line { width:48px; background:linear-gradient(90deg,#cd853f,#b87333); }
+
+/* ── Layout ── */
+.main { display:grid; grid-template-columns:1fr 360px; gap:36px; }
+@media (max-width:860px) { .main { grid-template-columns:1fr; } }
+
+.sec-hd { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+.sec-hd .dot { width:7px; height:7px; border-radius:50%; }
+.sec-hd .txt { font-size:0.9em; font-weight:800; color:#5a4a3a; letter-spacing:2px; }
+
+/* ── Game Cards ── */
+.game-card { background:#fff; border:1px solid #f0e8d8; border-radius:14px; padding:18px 20px; margin-bottom:12px;
+  position:relative; box-shadow:0 2px 12px rgba(0,0,0,0.03); }
+.game-card::after { content:''; position:absolute; top:0; left:0; width:4px; height:100%; border-radius:4px 0 0 4px; }
+.game-card:nth-child(5n+1)::after { background:#e74c3c; }
+.game-card:nth-child(5n+2)::after { background:#f39c12; }
+.game-card:nth-child(5n+3)::after { background:#27ae60; }
+.game-card:nth-child(5n+4)::after { background:#2980b9; }
+.game-card:nth-child(5n+5)::after { background:#8e44ad; }
+.g-top { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.g-venue { font-weight:700; font-size:0.9em; color:#4a4a5a; }
+.g-meta { font-size:0.68em; color:#bbb; }
+
+.p-row { display:flex; align-items:center; gap:10px; padding:5px 0; }
+.p-row .pa { width:24px; height:24px; border-radius:50%; object-fit:cover; background:#f0e8d8; flex-shrink:0; }
+.p-row .rk { font-size:0.66em; font-weight:800; width:18px; text-align:center; flex-shrink:0; color:#ccc; }
+.p-row .rk.g { color:#f39c12; }
+.p-row .rk.s { color:#a0a0a0; }
+.p-row .rk.b { color:#cd853f; }
+.p-row .pi { flex:1; min-width:0; }
+.p-row .pn { font-size:0.8em; font-weight:700; color:#3a3a4a; }
+.p-row.win .pn { color:#e67e22; }
+.p-row .pt { display:flex; gap:4px; flex-wrap:wrap; margin-top:2px; }
+.p-row .pt span { font-size:0.62em; padding:1px 7px; border-radius:5px; background:#fef5e7; color:#c9a44b; }
+.p-row .pq { font-size:0.68em; color:#bbb; font-style:italic; margin-top:1px; }
+.p-row .ps { font-weight:700; font-size:0.82em; color:#27ae60; flex-shrink:0; min-width:48px; text-align:right; }
+.g-photo { margin-top:12px; }
+.g-photo-label { font-size:0.75em; font-weight:700; color:#b0a090; letter-spacing:2px; margin-bottom:10px; }
+.g-photo-fan { display:flex; position:relative; height:140px; align-items:center; padding:0 20px; overflow-x:auto; }
+.g-photo-fan img { height:120px; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.15); cursor:pointer; transition:0.3s; object-fit:cover; border:3px solid #fff; margin-left:-30px; position:relative; flex-shrink:0; }
+.g-photo-fan img:first-child { margin-left:0; }
+.g-photo-fan img:hover { transform:translateY(-10px) rotate(0deg) !important; z-index:10; box-shadow:0 12px 32px rgba(0,0,0,0.3); }
+.g-photo-fan img:nth-child(1) { transform:rotate(-5deg); z-index:6; }
+.g-photo-fan img:nth-child(2) { transform:rotate(2deg); z-index:5; }
+.g-photo-fan img:nth-child(3) { transform:rotate(-3deg); z-index:4; }
+.g-photo-fan img:nth-child(4) { transform:rotate(4deg); z-index:3; }
+.g-photo-fan img:nth-child(5) { transform:rotate(-2deg); z-index:2; }
+.g-photo-fan img:nth-child(6) { transform:rotate(5deg); z-index:1; }
+/* Lightbox */
+.lightbox { display:none; position:fixed; top:0;left:0;width:100%;height:100%; background:rgba(0,0,0,0.92); z-index:200; justify-content:center; align-items:center; cursor:pointer; }
+.lightbox.show { display:flex; }
+.lightbox img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:10px; box-shadow:0 8px 40px rgba(0,0,0,0.5); }
+
+/* ── Sidebar ── */
+.sb-card { background:#fff; border:1px solid #f0e8d8; border-radius:14px; padding:18px; margin-bottom:14px; box-shadow:0 2px 10px rgba(0,0,0,0.03); }
+.sb-card h3 { font-size:0.9em; font-weight:800; color:#5a4a3a; letter-spacing:1px; margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid #f0d060; }
+
+.rk-row { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid #faf5ea; }
+.rk-row:last-child { border-bottom:none; }
+.rk-row .ra { width:24px; height:24px; border-radius:50%; object-fit:cover; background:#f0e8d8; flex-shrink:0; }
+.rk-row .rn { width:18px; font-size:0.68em; font-weight:800; text-align:center; flex-shrink:0; color:#ccc; }
+.rk-row .rn.g { color:#f39c12; }
+.rk-row .rn.s { color:#a0a0a0; }
+.rk-row .rn.b { color:#cd853f; }
+.rk-row .rm { flex:1; font-weight:600; font-size:0.8em; color:#3a3a4a; }
+.rk-row .rr { text-align:right; font-size:0.68em; color:#b0a090; }
+
+.cloud { display:flex; flex-wrap:wrap; gap:5px; }
+.cloud span { padding:3px 10px; border-radius:10px; font-size:0.68em; background:#fef5e7; color:#c9a44b; font-weight:600; }
+.cloud span.h { background:linear-gradient(135deg,#fff3cd,#ffe69c); color:#b8860b; }
+
+.v-row { display:flex; justify-content:space-between; padding:4px 0; font-size:0.78em; color:#8a8a9a; }
+.v-row .vc { color:#27ae60; font-weight:700; }
+
+.footer { text-align:center; color:#d0d0d8; font-size:0.66em; margin-top:40px; padding-bottom:16px; }
+
+/* ── Form ── */
+.import-box { text-align:center; margin-bottom:20px; }
+.import-box button { padding:8px 20px; border-radius:20px; border:2px solid #f0d060; background:#fff9e6; color:#b8860b; font-weight:700; font-size:0.78em; cursor:pointer; transition:0.2s; }
+.import-box button:hover { background:#fff3cd; }
+
+/* ── Modal ── */
+.modal-overlay { display:none; position:fixed; top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.4); z-index:100; justify-content:center; align-items:center; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:#fff; border-radius:20px; padding:28px 24px; max-width:480px; width:90%;
+  max-height:80vh; overflow-y:auto; box-shadow:0 12px 40px rgba(0,0,0,0.15); position:relative; }
+.modal-close { position:absolute; top:14px; right:18px; font-size:1.3em; cursor:pointer; color:#ccc; background:none; border:none; }
+.modal-close:hover { color:#666; }
+.modal-box .m-name { font-size:1.2em; font-weight:900; color:#3a3a4a; margin-bottom:4px; }
+.modal-box .m-stat { font-size:0.78em; color:#b0a090; margin-bottom:18px; }
+.modal-box .m-chart { width:100%; height:200px; margin-bottom:18px; background:#fdfaf3; border-radius:12px; }
+.modal-box h4 { font-size:0.8em; font-weight:800; color:#5a4a3a; margin-bottom:8px; }
+.modal-box .m-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+.modal-box .m-tags span { padding:4px 12px; border-radius:12px; font-size:0.75em; font-weight:600; background:#fef5e7; color:#c9a44b; }
+.modal-box .m-games { font-size:0.78em; color:#8a8a9a; line-height:1.8; }
+
+/* clickable */
+.clickable { cursor:pointer; transition:0.15s; }
+.clickable:hover { opacity:0.75; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="tag">W O R L D · C U P · O F · U N O</div>
+  <h1>UNO 战纪</h1>
+  <div class="sub">我们的聚会 · 每一场都值得被记住</div>
+</div>
+
+<div id="countdown-wrap"></div>
+<div id="top-stats" class="top-stats"></div>
+
+<div class="podium-wrap">
+  <div class="pw-title"> 荣 誉 殿 堂</div>
+  <div class="podium-wrap-confetti">
+<span class="confetti">🎉</span><span class="confetti">✨</span><span class="confetti">🌟</span><span class="confetti">🎊</span><span class="confetti">💫</span><span class="confetti">🎈</span><span class="confetti">🎀</span><span class="confetti">🎉</span>
+<div class="podium" id="podium"></div>
+</div></div>
+
+<div class="main">
+  <div>
+    <div class="sec-hd"><div class="dot" style="background:#f39c12"></div><div class="txt">战 史 回 顾</div></div>
+    <div id="chronicle"></div>
+  </div>
+  <div>
+    <div class="sb-card">
+      <h3> 完 整 排 行</h3>
+      <div id="leaderboard"></div>
+    </div>
+    <div class="sb-card">
+      <h3> 风 格 图 谱</h3>
+      <div class="cloud" id="style-cloud"></div>
+    </div>
+    <div class="sb-card">
+      <h3> 常 驻 地 图</h3>
+      <div id="venues"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据存于浏览器 · 刷新不丢失</div>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="m-name" id="m-name"></div>
+    <div class="m-stat" id="m-stat"></div>
+    <canvas class="m-chart" id="m-chart"></canvas>
+    <h4> 标签汇总</h4>
+    <div class="m-tags" id="m-tags"></div>
+    <h4> 历史战绩</h4>
+    <div class="m-games" id="m-games"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const NEXT_GAME = '2026-06-13';
+const NEXT_GAME_LOCATION = '高岩&牟斌家';
+
+// 从 CSV 导入？直接把 CSV 内容粘贴进 gamesData 字符串
+const gamesData = `date,location,rounds,name,score,styles,highlight,avatar,photos
+2026-3-1,岩子&牟斌家,48,湾湾,-1319,,,关于聚会/头像/湾湾.png.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-3-1,岩子&牟斌家,48,凌智,-1737,摸牌很慢,,关于聚会/头像/凌智.png.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-3-1,岩子&牟斌家,48,岩子,-2438,,,关于聚会/头像/岩子.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-3-1,岩子&牟斌家,48,杨行,-2524,,,关于聚会/头像/杨行.png.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-3-1,岩子&牟斌家,48,晶晶,-3695,,,关于聚会/头像/晶晶.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-3-1,岩子&牟斌家,48,牟斌,-100037,,全场唯一万岁爷,关于聚会/头像/牟斌.png.jpg,关于聚会/第一场/微信图片_20260611131513_147_19.jpg|关于聚会/第一场/微信图片_20260611131526_148_19.jpg|关于聚会/第一场/微信图片_20260611131530_149_19.jpg|关于聚会/第一场/微信图片_20260611131536_150_19.jpg|关于聚会/第一场/微信图片_20260611131543_151_19.jpg|关于聚会/第一场/微信图片_20260611131550_152_19.jpg
+2026-2-7,杨行家,50,牟斌,0,,,关于聚会/头像/牟斌.png.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2026-2-7,杨行家,50,岩子,0,,,关于聚会/头像/岩子.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2026-2-7,杨行家,50,湾湾,0,,,关于聚会/头像/湾湾.png.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2026-2-7,杨行家,50,凌智,0,,,关于聚会/头像/凌智.png.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2026-2-7,杨行家,50,杨行,0,,,关于聚会/头像/杨行.png.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2026-2-7,杨行家,50,晶晶,0,,,关于聚会/头像/晶晶.jpg,关于聚会/第二场/微信图片_20260611131415_144_19.jpg|关于聚会/第二场/微信图片_20260611131422_145_19.jpg|关于聚会/第二场/微信图片_20260611131432_146_19.jpg
+2025-12-21,湾湾&凌智家,55,牟斌,0,,,关于聚会/头像/牟斌.png.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg
+2025-12-21,湾湾&凌智家,55,岩子,0,,,关于聚会/头像/岩子.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg
+2025-12-21,湾湾&凌智家,55,湾湾,0,,,关于聚会/头像/湾湾.png.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg
+2025-12-21,湾湾&凌智家,55,凌智,0,,,关于聚会/头像/凌智.png.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg
+2025-12-21,湾湾&凌智家,55,杨行,0,,,关于聚会/头像/杨行.png.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg
+2025-12-21,湾湾&凌智家,55,晶晶,0,,,关于聚会/头像/晶晶.jpg,关于聚会/第三场/微信图片_20260611131618_153_19.jpg|关于聚会/第三场/微信图片_20260611131644_154_19.jpg`;
+
+// Parse CSV -> game objects
+function parseCSV(csv) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return [];
+  const games = []; let cur = null;
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',');
+    const [date, location, rounds, name, score, styles, highlight, avatar, photos] = cols;
+    if (!cur || cur.date !== date || cur.location !== location) {
+      const photoList = photos ? photos.split('|').filter(Boolean) : [];
+      cur = { date, location, rounds: parseInt(rounds), players: [], photos: photoList };
+      games.push(cur);
+    }
+    const s = styles ? styles.split(';').filter(Boolean) : [];
+    cur.players.push({ name, score: parseInt(score), styles: s.length?s:undefined, highlight: highlight||undefined, avatar: avatar||undefined });
+  }
+  // Sort newest first
+  games.sort((a,b) => new Date(b.date) - new Date(a.date));
+  return games;
+}
+
+const games = parseCSV(gamesData);
+localStorage.setItem('uno_g', JSON.stringify(games));
+
+function av(u) { return u||''; }
+function rank(n) { return n===0?'g':n===1?'s':n===2?'b':''; }
+
+function render() {
+  if (!games.length) { document.getElementById('chronicle').innerHTML='<p style="color:#bbb;text-align:center;padding:60px">暂无数据</p>'; return; }
+  const R = buildRankings();
+  document.getElementById('countdown-wrap').innerHTML = countdown();
+  document.getElementById('top-stats').innerHTML = stats(R);
+  document.getElementById('podium').innerHTML = podium(R);
+  document.getElementById('chronicle').innerHTML = chronicle();
+  document.getElementById('leaderboard').innerHTML = lb(R);
+  cloud(); venues();
+}
+
+function countdown() {
+  if (!NEXT_GAME) return '';
+  const d = Math.ceil((new Date(NEXT_GAME).getTime() - Date.now()) / 864e5);
+  if (d < 0) return '';
+  return `<div class="cdt-wrap"><div class="cdt-box"><span class="cdt-label">打牌倒计时</span><span class="cdt-num">${d}</span><span class="cdt-label"> 天</span><span class="cdt-sep"></span><span class="cdt-label"> 📍 ${NEXT_GAME_LOCATION}</span></div></div>`;
+}
+
+function buildRankings() {
+  const m = {};
+  games.forEach(g => {
+    // Check if this game has real scores (not all zeros/same)
+    const scores = g.players.map(p=>p.score);
+    const hasRealScores = new Set(scores).size > 1 || scores[0] !== 0;
+    g.players.forEach((p,i) => {
+      if (!m[p.name]) m[p.name] = { name:p.name, avatar:p.avatar||'', g:0, w:0, s:0 };
+      if (hasRealScores) { m[p.name].g++; m[p.name].s += p.score; if (i<3) m[p.name].w++; }
+    });
+  });
+  return Object.values(m).map(p => ({ ...p, wr:p.g>0?(p.w/p.g*100).toFixed(1):'-', av:p.g>0?(p.s/p.g).toFixed(0):'-' })).sort((a,b)=>b.s-a.s);
+}
+
+function stats(R) {
+  const ps = new Set(); games.forEach(g => g.players.forEach(p => ps.add(p.name)));
+  let rds = 0; games.forEach(g => rds += g.rounds);
+  return `
+    <div class="stat-mod"><div class="num">${games.length}</div><div class="label">总 战 局</div></div>
+    <div class="stat-mod"><div class="num">${rds}</div><div class="label">总 轮 数</div></div>
+    <div class="stat-mod"><div class="num">${ps.size}</div><div class="label">参 赛 人 数</div></div>
+    <div class="stat-mod"><div class="num">${games.length*12}h</div><div class="label">打 牌 时 长</div></div>`;
+}
+
+function podium(R) {
+  if (R.length<2) return '';
+  const [a,b,c]=[R[0],R[1],R[2]];
+  return `${b?`<div class="p-spot p-2"><div style="font-size:1.6em"></div><div class="p-avatar-wrap"><div class="p-crown"></div>${b.avatar?`<img class="p-avatar" src="${b.avatar}">`:`<div class="p-avatar"></div>`}</div><div class="p-name">${b.name}</div><div class="p-stat">总${b.s}分 · ${b.g}场</div><div class="p-line"></div></div>`:''}
+    <div class="p-spot p-1"><div style="font-size:2em"></div><div class="p-avatar-wrap"><div class="p-crown"></div>${a.avatar?`<img class="p-avatar" src="${a.avatar}">`:`<div class="p-avatar"></div>`}</div><div class="p-name">${a.name}</div><div class="p-stat">总${a.s}分 · ${a.g}场</div><div class="p-line"></div></div>
+    ${c?`<div class="p-spot p-3"><div style="font-size:1.4em"></div><div class="p-avatar-wrap"><div class="p-crown"></div>${c.avatar?`<img class="p-avatar" src="${c.avatar}">`:`<div class="p-avatar"></div>`}</div><div class="p-name">${c.name}</div><div class="p-stat">总${c.s}分 · ${c.g}场</div><div class="p-line"></div></div>`:''}`;
+}
+
+function daysAgo(d) { const diff=Math.floor((Date.now()-new Date(d).getTime())/864e5); return diff===0?'今天':diff+'天前'; }
+
+function chronicle() {
+  return [...games].reverse().map(g => `
+    <div class="game-card"><div class="g-top"><span class="g-venue">${g.location}</span><span class="g-meta">${g.date} · ${g.rounds}轮 · 距今${daysAgo(g.date)}</span></div>
+      ${g.players.map((p,i)=>`<div class="p-row${i===0?' win':''}">
+        ${p.avatar?`<img class="pa" src="${p.avatar}">`:`<div class="pa"></div>`}<div class="rk ${rank(i)}">${i+1}</div>
+        <div class="pi"><div class="pn">${i===0?'':''}${p.name}</div>
+        ${p.styles?`<div class="pt">${p.styles.map(s=>`<span>${s}</span>`).join('')}</div>`:''}
+        ${p.highlight?`<div class="pq">${p.highlight}</div>`:''}</div>
+        <div class="ps">${p.score}分</div></div>`).join('')}
+    </div>`).join('');
+}
+
+function lb(R) {
+  return R.map((p,i)=>`<div class="rk-row">
+    ${p.avatar?`<img class="ra" src="${p.avatar}">`:`<div class="ra"></div>`}<div class="rn ${rank(i)}">${i+1}</div>
+    <div class="rm">${p.name}</div><div class="rr">${p.wr}%<span style="color:#ccc"> · ${p.g}场 · 均${p.av}分</span></div>
+  </div>`).join('');
+}
+
+function cloud() {
+  const c={}; games.forEach(g=>g.players.forEach(p=>(p.styles||[]).forEach(s=>{c[s]=(c[s]||0)+1;})));
+  const mx=Math.max(...Object.values(c),1);
+  document.getElementById('style-cloud').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1])
+    .map(([s,n])=>`<span class="${n>=mx*0.4?'h':''}">${s}×${n}</span>`).join('')||'<span style="color:#ccc">暂无标签</span>';
+}
+
+function venues() {
+  const c={}; games.forEach(g=>{c[g.location]=(c[g.location]||0)+1;});
+  document.getElementById('venues').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1])
+    .map(([v,n])=>`<div class="v-row"><span>${v}</span><span class="vc">${n}场</span></div>`).join('');
+}
+
+function openModal(name) {
+  const hist = []; games.forEach(g => g.players.find(p => p.name===name && hist.push({ date:g.date, location:g.location, score:p.score, rank:g.players.indexOf(p)+1, styles:p.styles, highlight:p.highlight })));
+  const tags = {}; hist.forEach(h => (h.styles||[]).forEach(s => { tags[s]=(tags[s]||0)+1; }));
+  const wins = hist.filter(h => h.rank===1).length;
+  document.getElementById('m-name').textContent = name;
+  document.getElementById('m-stat').textContent = `${hist.length}场 · ${wins}胜 · 胜率${(wins/hist.length*100).toFixed(1)}%`;
+  document.getElementById('m-tags').innerHTML = Object.entries(tags).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<span>${s}×${n}</span>`).join('') || '<span style="color:#ccc">暂无标签</span>';
+  document.getElementById('m-games').innerHTML = hist.slice().reverse().map(h => `${h.date} ${h.location} · 第${h.rank}名 · ${h.score}分${h.highlight?' · "'+h.highlight+'"':''}`).join('<br>');
+  document.getElementById('modal').classList.add('show');
+  // draw chart
+  setTimeout(() => {
+    const cvs = document.getElementById('m-chart');
+    cvs.width = cvs.offsetWidth * 2; cvs.height = cvs.offsetHeight * 2;
+    const ctx = cvs.getContext('2d'); ctx.scale(2,2);
+    const w = cvs.offsetWidth, h = cvs.offsetHeight, pad=30;
+    const data = hist.slice().reverse();
+    if (data.length < 2) { ctx.fillStyle='#ccc'; ctx.font='14px "Noto Sans SC"'; ctx.textAlign='center'; ctx.fillText('至少2场才有折线',w/2,h/2); return; }
+    const maxS = Math.max(...data.map(d=>d.score));
+    const minS = Math.min(...data.map(d=>d.score));
+    const range = maxS-minS || 1;
+    const stepX = (w-pad*2)/(data.length-1);
+    // grid
+    ctx.strokeStyle='#f0e8d8'; ctx.lineWidth=1;
+    for (let i=0;i<4;i++) { const y=pad+(h-pad*2)/3*i; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); }
+    // line
+    ctx.beginPath(); ctx.strokeStyle='#f39c12'; ctx.lineWidth=3; ctx.lineJoin='round';
+    data.forEach((d,i) => {
+      const x=pad+i*stepX, y=pad+(h-pad*2)*(1-(d.score-minS)/range);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // dots
+    data.forEach((d,i) => {
+      const x=pad+i*stepX, y=pad+(h-pad*2)*(1-(d.score-minS)/range);
+      ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#f39c12'; ctx.lineWidth=2.5; ctx.stroke();
+      ctx.fillStyle='#8a8a9a'; ctx.font='10px "Noto Sans SC"'; ctx.textAlign='center'; ctx.fillText(d.score,x,y-12);
+      ctx.fillText(d.date.slice(5),x,h-8);
+    });
+  }, 100);
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+// make names & avatars clickable
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-player]');
+  if (el) openModal(el.dataset.player);
+});
+
+// Update chronicle & leaderboard & podium to add data-player
+const _origChronicle = chronicle;
+chronicle = function() {
+  return games.map(g => `
+    <div class="game-card"><div class="g-top"><span class="g-venue">${g.location}</span><span class="g-meta">${g.date} · ${g.rounds}轮 · 距今${daysAgo(g.date)}</span></div>
+      ${g.players.map((p,i)=>`<div class="p-row${i===0?' win':''}" data-player="${p.name}">
+        ${p.avatar?`<img class="pa clickable" src="${p.avatar}" data-player="${p.name}">`:`<div class="pa clickable" data-player="${p.name}"></div>`}<div class="rk ${rank(i)}">${i+1}</div>
+        <div class="pi"><div class="pn clickable" data-player="${p.name}">${i===0?'':''}${p.name}</div>
+        ${p.styles?`<div class="pt">${p.styles.map(s=>`<span>${s}</span>`).join('')}</div>`:''}
+        ${p.highlight?`<div class="pq">${p.highlight}</div>`:''}</div>
+        <div class="ps">${p.score}分</div></div>`).join('')}
+      ${g.photos && g.photos.length ? `<div class="g-photo"><div class="g-photo-label"> 留影时刻</div><div class="g-photo-fan">${g.photos.map(ph=>`<img src="${ph}" onclick="event.stopPropagation();document.getElementById('lightbox-img').src='${ph}';document.getElementById('lightbox').classList.add('show')" onerror="this.style.display='none'" loading="lazy">`).join('')}</div></div>` : ''}
+    </div>`).join('');
+};
+const _origLB = lb;
+lb = function(R) {
+  return R.map((p,i)=>`<div class="rk-row" data-player="${p.name}">
+    ${p.avatar?`<img class="ra clickable" src="${p.avatar}" data-player="${p.name}">`:`<div class="ra clickable" data-player="${p.name}"></div>`}<div class="rn ${rank(i)}">${i+1}</div>
+    <div class="rm clickable" data-player="${p.name}">${p.name}</div><div class="rr">总${p.s}分<span style="color:#ccc"> · ${p.g}场 · 胜率${p.wr}%</span></div>
+  </div>`).join('');
+};
+const _origPodium = podium;
+podium = function(R) {
+  if (R.length<2) return '';
+  const [a,b,c]=[R[0],R[1],R[2]];
+  return `${b?`<div class="p-spot p-2" data-player="${b.name}"><div class="p-avatar-wrap"><div class="p-crown"></div>${b.avatar?`<img class="p-avatar clickable" src="${b.avatar}" data-player="${b.name}">`:`<div class="p-avatar clickable" data-player="${b.name}"></div>`}</div><div class="p-name clickable" data-player="${b.name}">${b.name}</div><div class="p-stat">${b.wr}% · ${b.g}场</div><div class="p-line"></div></div>`:''}
+    <div class="p-spot p-1" data-player="${a.name}"><div class="p-avatar-wrap"><div class="p-crown"></div>${a.avatar?`<img class="p-avatar clickable" src="${a.avatar}" data-player="${a.name}">`:`<div class="p-avatar clickable" data-player="${a.name}"></div>`}</div><div class="p-name clickable" data-player="${a.name}">${a.name}</div><div class="p-stat">${a.wr}% · ${a.g}场</div><div class="p-line"></div></div>
+    ${c?`<div class="p-spot p-3" data-player="${c.name}"><div class="p-avatar-wrap"><div class="p-crown"></div>${c.avatar?`<img class="p-avatar clickable" src="${c.avatar}" data-player="${c.name}">`:`<div class="p-avatar clickable" data-player="${c.name}"></div>`}</div><div class="p-name clickable" data-player="${c.name}">${c.name}</div><div class="p-stat">${c.wr}% · ${c.g}场</div><div class="p-line"></div></div>`:''}`;
+};
+
+window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('show'); };
+render();
+</script>
+</body>
+</html>
