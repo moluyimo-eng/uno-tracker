@@ -154,9 +154,11 @@ body {
 .rk-row .rm { flex:1; font-weight:600; font-size:0.8em; color:#3a3a4a; }
 .rk-row .rr { text-align:right; font-size:0.68em; color:#b0a090; }
 
-.cloud { display:flex; flex-wrap:wrap; gap:5px; }
-.cloud span { padding:3px 10px; border-radius:10px; font-size:0.68em; background:#fef5e7; color:#c9a44b; font-weight:600; }
-.cloud span.h { background:linear-gradient(135deg,#fff3cd,#ffe69c); color:#b8860b; }
+.cloud { display:flex; flex-wrap:wrap; gap:6px; }
+.cloud .c-tag { display:inline-flex; align-items:center; gap:3px; padding:3px 10px 3px 4px; border-radius:12px; font-size:0.68em; background:#fef5e7; color:#c9a44b; font-weight:600; }
+.cloud .c-tag.h { background:linear-gradient(135deg,#fff3cd,#ffe69c); color:#b8860b; }
+.cloud .c-av { width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid #fff; flex-shrink:0; }
+.cloud .c-av + .c-av { margin-left:-6px; }
 
 .v-row { display:flex; justify-content:space-between; padding:4px 0; font-size:0.78em; color:#8a8a9a; }
 .v-row .vc { color:#27ae60; font-weight:700; }
@@ -234,7 +236,8 @@ body {
   .sb-card { padding: 12px 10px; }
   .sb-card h3 { font-size: 0.78em; margin-bottom: 10px; padding-bottom: 8px; }
   .v-row { font-size: 0.7em; }
-  .cloud span { font-size: 0.62em; padding: 2px 8px; }
+  .cloud .c-tag { font-size: 0.62em; padding: 2px 8px 2px 3px; }
+  .cloud .c-av { width: 16px; height: 16px; }
   .modal-box { padding: 18px 14px; max-width: 96vw; }
   .modal-box .m-name { font-size: 1em; }
   .modal-box .m-stat { font-size: 0.7em; }
@@ -426,10 +429,10 @@ function lb(R) {
 }
 
 function cloud() {
-  const c={}; games.forEach(g=>g.players.forEach(p=>(p.styles||[]).forEach(s=>{c[s]=(c[s]||0)+1;})));
-  const mx=Math.max(...Object.values(c),1);
-  document.getElementById('style-cloud').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1])
-    .map(([s,n])=>`<span class="${n>=mx*0.4?'h':''}">${s}×${n}</span>`).join('')||'<span style="color:#ccc">暂无标签</span>';
+  const c={}; games.forEach(g=>g.players.forEach(p=>(p.styles||[]).forEach(s=>{if(!c[s])c[s]={n:0,players:{}};c[s].n++;c[s].players[p.name]=p.avatar||'';})));
+  const mx=Math.max(...Object.values(c).map(v=>v.n),1);
+  document.getElementById('style-cloud').innerHTML=Object.entries(c).sort((a,b)=>b[1].n-a[1].n)
+    .map(([s,v])=>`<span class="c-tag ${v.n>=mx*0.4?'h':''}">${Object.values(v.players).filter(a=>a).slice(0,3).map(a=>`<img class="c-av" src="${a}">`).join('')}${s}×${v.n}</span>`).join('')||'<span style="color:#ccc">暂无标签</span>';
 }
 
 function venues() {
