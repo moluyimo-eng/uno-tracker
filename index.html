@@ -271,6 +271,7 @@ body {
   <div>
     <div class="sec-hd"><div class="dot" style="background:#f39c12"></div><div class="txt">战 史 回 顾</div></div>
     <div id="chronicle"></div>
+    <div id="load-more-wrap" style="text-align:center;margin-top:16px;"></div>
   </div>
   <div>
     <div class="sb-card">
@@ -349,6 +350,8 @@ fetch('data.csv')
 function av(u) { return u||''; }
 function rank(n) { return n===0?'g':n===1?'s':n===2?'b':''; }
 
+let visibleCount = 1;
+
 function render() {
   if (!games.length) { document.getElementById('chronicle').innerHTML='<p style="color:#bbb;text-align:center;padding:60px">暂无数据</p>'; return; }
   const R = buildRankings();
@@ -357,7 +360,22 @@ function render() {
   document.getElementById('podium').innerHTML = podium(R);
   document.getElementById('chronicle').innerHTML = chronicle();
   document.getElementById('leaderboard').innerHTML = lb(R);
+  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
   cloud(); venues();
+}
+
+function loadMoreBtn() {
+  const total = games.length;
+  if (visibleCount >= total) return '';
+  const remaining = total - visibleCount;
+  const next = Math.min(3, remaining);
+  return `<button onclick="loadMore()" style="padding:10px 28px;border-radius:20px;border:2px solid #f0d060;background:#fff9e6;color:#b8860b;font-weight:700;font-size:0.82em;cursor:pointer;">加载更多 (+${next})</button>`;
+}
+
+function loadMore() {
+  visibleCount = Math.min(visibleCount + 3, games.length);
+  document.getElementById('chronicle').innerHTML = chronicle();
+  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
 }
 
 function countdown() {
@@ -402,7 +420,8 @@ function podium(R) {
 function daysAgo(d) { const diff=Math.floor((Date.now()-new Date(d).getTime())/864e5); return diff===0?'今天':diff+'天前'; }
 
 function chronicle() {
-  return [...games].reverse().map(g => `
+  const reversed = [...games].reverse();
+  return reversed.slice(0, visibleCount).map(g => `
     <div class="game-card"><div class="g-top"><span class="g-venue">${g.location}</span><span class="g-meta">${g.date} · ${g.rounds}轮 · 距今${daysAgo(g.date)}</span></div>
       ${g.players.map((p,i)=>`<div class="p-row${i===0?' win':''}">
         ${p.avatar?`<img class="pa" src="${p.avatar}">`:`<div class="pa"></div>`}<div class="rk ${rank(i)}">${i+1}</div>
