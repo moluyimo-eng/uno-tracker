@@ -502,7 +502,8 @@ document.addEventListener('click', e => {
 // Update chronicle & leaderboard & podium to add data-player
 const _origChronicle = chronicle;
 chronicle = function() {
-  return games.map(g => `
+  const reversed = [...games].reverse();
+  return reversed.slice(0, visibleCount).map(g => `
     <div class="game-card"><div class="g-top"><span class="g-venue">${g.location}</span><span class="g-meta">${g.date} · ${g.rounds}轮 · 距今${daysAgo(g.date)}</span></div>
       ${g.players.map((p,i)=>`<div class="p-row${i===0?' win':''}" data-player="${p.name}">
         ${p.avatar?`<img class="pa clickable" src="${p.avatar}" data-player="${p.name}">`:`<div class="pa clickable" data-player="${p.name}"></div>`}<div class="rk ${rank(i)}">${i+1}</div>
