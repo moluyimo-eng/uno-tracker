@@ -271,7 +271,7 @@ body {
   <div>
     <div class="sec-hd"><div class="dot" style="background:#f39c12"></div><div class="txt">战 史 回 顾</div></div>
     <div id="chronicle"></div>
-    <div id="load-more-wrap" style="text-align:center;margin-top:12px;"></div>
+    <div id="load-more-wrap" style="text-align:left;padding-left:4px;margin-top:8px;"></div>
   </div>
   <div>
     <div class="sb-card">
@@ -332,8 +332,12 @@ function parseCSV(csv) {
     const s = styles ? styles.split(';').filter(Boolean) : [];
     cur.players.push({ name, score: parseInt(score), styles: s.length?s:undefined, highlight: highlight||undefined, avatar: avatar||undefined });
   }
-  // Sort newest first
-  games.sort((a,b) => new Date(b.date) - new Date(a.date));
+  // Sort newest first (manual parse for cross-browser compat)
+  games.sort((a,b) => {
+    const [ay,am,ad] = a.date.split('-').map(Number);
+    const [by,bm,bd] = b.date.split('-').map(Number);
+    return new Date(by,bm-1,bd) - new Date(ay,am-1,ad);
+  });
   return games;
 }
 
