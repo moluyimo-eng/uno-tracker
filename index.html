@@ -271,6 +271,7 @@ body {
   <div>
     <div class="sec-hd"><div class="dot" style="background:#f39c12"></div><div class="txt">战 史 回 顾</div></div>
     <div id="chronicle"></div>
+    <div id="load-more-wrap" style="text-align:center;margin-top:12px;"></div>
   </div>
   <div>
     <div class="sb-card">
@@ -357,8 +358,9 @@ function render() {
   document.getElementById('countdown-wrap').innerHTML = countdown();
   document.getElementById('top-stats').innerHTML = stats(R);
   document.getElementById('podium').innerHTML = podium(R);
-  document.getElementById('chronicle').innerHTML = chronicle();
+   document.getElementById('chronicle').innerHTML = chronicle();
   document.getElementById('leaderboard').innerHTML = lb(R);
+  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
   cloud(); venues();
 }
 
@@ -373,6 +375,7 @@ function loadMoreBtn() {
 function loadMore() {
   visibleCount = Math.min(visibleCount + 3, games.length);
   document.getElementById('chronicle').innerHTML = chronicle();
+  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
 }
 
 function countdown() {
@@ -426,7 +429,7 @@ function chronicle() {
         ${p.highlight?`<div class="pq">${p.highlight}</div>`:''}</div>
         <div class="ps">${p.score}分</div></div>`).join('')}
     </div>`).join('');
-  return html + (loadMoreBtn() ? '<div style="text-align:center;margin-top:16px;">' + loadMoreBtn() + '</div>' : '');
+  return html;
 }
 
 function lb(R) {
@@ -509,7 +512,7 @@ chronicle = function() {
         <div class="ps">${p.score}分</div></div>`).join('')}
       ${g.photos && g.photos.length ? `<div class="g-photo"><div class="g-photo-label"> 留影时刻</div><div class="g-photo-fan">${g.photos.map(ph=>`<img src="${ph}" onclick="event.stopPropagation();document.getElementById('lightbox-img').src='${ph}';document.getElementById('lightbox').classList.add('show')" onerror="this.style.display='none'" loading="lazy">`).join('')}</div></div>` : ''}
     </div>`).join('');
-  return html + (loadMoreBtn() ? '<div style="text-align:center;margin-top:16px;">' + loadMoreBtn() + '</div>' : '');
+  return html;
 };
 const _origLB = lb;
 lb = function(R) {
