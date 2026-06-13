@@ -271,7 +271,6 @@ body {
   <div>
     <div class="sec-hd"><div class="dot" style="background:#f39c12"></div><div class="txt">战 史 回 顾</div></div>
     <div id="chronicle"></div>
-    <div id="load-more-wrap" style="text-align:center;margin-top:8px;"></div>
   </div>
   <div>
     <div class="sb-card">
@@ -364,7 +363,6 @@ function render() {
   document.getElementById('podium').innerHTML = podium(R);
    document.getElementById('chronicle').innerHTML = chronicle();
   document.getElementById('leaderboard').innerHTML = lb(R);
-  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
   cloud(); venues();
 }
 
@@ -379,7 +377,6 @@ function loadMoreBtn() {
 function loadMore() {
   visibleCount = Math.min(visibleCount + 3, games.length);
   document.getElementById('chronicle').innerHTML = chronicle();
-  document.getElementById('load-more-wrap').innerHTML = loadMoreBtn();
 }
 
 function countdown() {
@@ -506,7 +503,9 @@ document.addEventListener('click', e => {
 // Update chronicle & leaderboard & podium to add data-player
 const _origChronicle = chronicle;
 chronicle = function() {
-  const html = games.slice(0, visibleCount).map(g => `
+  const visible = games.slice(0, visibleCount);
+  const btn = loadMoreBtn();
+  return visible.map((g, idx) => `
     <div class="game-card"><div class="g-top"><span class="g-venue">${g.location}</span><span class="g-meta">${g.date} · ${g.rounds}轮 · 距今${daysAgo(g.date)}</span></div>
       ${g.players.map((p,i)=>`<div class="p-row${i===0?' win':''}" data-player="${p.name}">
         ${p.avatar?`<img class="pa clickable" src="${p.avatar}" data-player="${p.name}">`:`<div class="pa clickable" data-player="${p.name}"></div>`}<div class="rk ${rank(i)}">${i+1}</div>
@@ -515,8 +514,8 @@ chronicle = function() {
         ${p.highlight?`<div class="pq">${p.highlight}</div>`:''}</div>
         <div class="ps">${p.score}分</div></div>`).join('')}
       ${g.photos && g.photos.length ? `<div class="g-photo"><div class="g-photo-label"> 留影时刻</div><div class="g-photo-fan">${g.photos.map(ph=>`<img src="${ph}" onclick="event.stopPropagation();document.getElementById('lightbox-img').src='${ph}';document.getElementById('lightbox').classList.add('show')" onerror="this.style.display='none'" loading="lazy">`).join('')}</div></div>` : ''}
+      ${idx === visible.length - 1 && btn ? `<div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px dashed #f0e8d8;">${btn}</div>` : ''}
     </div>`).join('');
-  return html;
 };
 const _origLB = lb;
 lb = function(R) {
