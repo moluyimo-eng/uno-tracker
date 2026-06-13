@@ -397,7 +397,11 @@ function buildRankings() {
       if (hasRealScores) { m[p.name].g++; m[p.name].s += p.score; if (i<3) m[p.name].w++; }
     });
   });
-  return Object.values(m).map(p => ({ ...p, wr:p.g>0?(p.w/p.g*100).toFixed(1):'-', av:p.g>0?(p.s/p.g).toFixed(0):'-' })).sort((a,b)=>b.s-a.s);
+  return Object.values(m).map(p => ({ ...p, wr:p.g>0?(p.w/p.g*100).toFixed(1):'-', av:p.g>0?(p.s/p.g).toFixed(0):'-' })).sort((a,b)=>{
+    const wa=a.g>0?a.w/a.g:0, wb=b.g>0?b.w/b.g:0;
+    if (wa!==wb) return wb-wa; // higher win rate first
+    return b.s-a.s; // then higher score
+  });
 }
 
 function stats(R) {
